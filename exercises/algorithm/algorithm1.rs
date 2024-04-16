@@ -118,7 +118,7 @@ impl<T> LinkedList<T> {
 
 impl<T> LinkedList<T>
 where
-    T: std::cmp::PartialOrd + std::fmt::Debug,
+    T: std::cmp::PartialOrd,
 {
     pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self {
         let mut a = list_a.into_iter();
