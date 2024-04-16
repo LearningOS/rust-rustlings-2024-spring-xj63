@@ -3,8 +3,6 @@
     This question requires you to use a stack to achieve a bracket match
 */
 
-// I AM NOT DONE
-
 #[derive(Debug)]
 struct Stack<T> {
     size: usize,
@@ -20,7 +18,7 @@ impl<T> Stack<T> {
     }
 
     fn is_empty(&self) -> bool {
-        0 == self.size
+        self.size == 0
     }
 
     fn len(&self) -> usize {
@@ -38,8 +36,8 @@ impl<T> Stack<T> {
     }
 
     fn pop(&mut self) -> Option<T> {
-        // TODO
-        None
+        self.size -= 1;
+        self.data.pop()
     }
 
     fn peek(&self) -> Option<&T> {
@@ -113,9 +111,57 @@ impl<'a, T> Iterator for IterMut<'a, T> {
     }
 }
 
+#[derive(PartialEq)]
+enum Bracket {
+    Round,       // ()
+    Square,      // []
+    Curly,       // {}
+    Angle,       // <>
+    DoubleQuote, // ""
+    SingleQuote, // ''
+}
+
+enum OpenClose {
+    Open(Bracket),
+    Close(Bracket),
+}
+
+impl TryFrom<char> for OpenClose {
+    type Error = ();
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        match value {
+            '(' => Ok(Self::Open(Bracket::Round)),
+            ')' => Ok(Self::Close(Bracket::Round)),
+            '[' => Ok(Self::Open(Bracket::Square)),
+            ']' => Ok(Self::Close(Bracket::Square)),
+            '{' => Ok(Self::Open(Bracket::Curly)),
+            '}' => Ok(Self::Close(Bracket::Curly)),
+            _ => Err(()),
+        }
+    }
+}
+
 fn bracket_match(bracket: &str) -> bool {
-    //TODO
-    true
+    let mut stack = Stack::new();
+    for chars in bracket.chars() {
+        if let Ok(ch) = OpenClose::try_from(chars) {
+            match ch {
+                OpenClose::Open(bracket) => stack.push(bracket),
+                OpenClose::Close(bracket) => match stack.peek() {
+                    Some(last) => match *last == bracket {
+                        true => {
+                            stack.pop();
+                        }
+                        false => return false,
+                    },
+                    None => return false,
+                },
+            }
+        }
+    }
+
+    stack.is_empty()
 }
 
 #[cfg(test)]
