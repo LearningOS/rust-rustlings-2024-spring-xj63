@@ -3,8 +3,6 @@
 // Execute `rustlings hint options1` or use the `hint` watch subcommand for a
 // hint.
 
-#![feature(exclusive_range_pattern)]
-
 // This function returns how much icecream there is left in the fridge.
 // If it's before 10PM, there's 5 pieces left. At 10PM, someone eats them
 // all, so there'll be no more left :(
@@ -13,11 +11,22 @@ fn maybe_icecream(time_of_day: u16) -> Option<u16> {
     // value of 0 The Option output should gracefully handle cases where
     // time_of_day > 23.
     // Complete the function body - remember to return an Option!
-    match time_of_day {
-        0..22 => Some(5),
-        22..24 => Some(0),
-        _ => None,
+
+    // match time_of_day {
+    //     0..22 => Some(5),
+    //     22..24 => Some(0),
+    //     _ => None,
+    // }
+
+    if 0 <= time_of_day && time_of_day < 22 {
+        return Some(5);
     }
+
+    if time_of_day <= 24 {
+        return Some(0);
+    }
+
+    return None;
 }
 
 #[cfg(test)]
