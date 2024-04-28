@@ -3,8 +3,6 @@
 // Execute `rustlings hint errors4` or use the `hint` watch subcommand for a
 // hint.
 
-#![feature(exclusive_range_pattern)]
-
 #[derive(PartialEq, Debug)]
 struct PositiveNonzeroInteger(u64);
 
@@ -19,7 +17,7 @@ impl PositiveNonzeroInteger {
         // Hmm...? Why is this only returning an Ok value?
         match value {
             0 => Err(CreationError::Zero),
-            i64::MIN..0 => Err(CreationError::Negative),
+            v if v.is_negative() => Err(CreationError::Negative),
             _ => Ok(PositiveNonzeroInteger(value as u64)),
         }
     }
